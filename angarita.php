@@ -1,12 +1,10 @@
 <?php
-
 /**
  * Clase encargada de gestionar diferentes paginas mediantes consumo sea por curl
  * hay que tener claro que podemos ejercer el consumo del html en caso que alla un cambio del resultado del
  * html del CNE hay que modificar las clases porque cambian las posiciones
  */
 class SearchCurl {
-
     /**
      * Permite consumir e interpretar la informacion del resultado del curl para solo extraer los datos necesarios
      * @author Gregorio Jose Bolivar Bolivar <elalconxvii@gmail.com>
@@ -30,16 +28,22 @@ class SearchCurl {
             $r = trim(str_replace($rempl, '|', self::limpiarCampo($text)));
             $resource = explode("|", $r);
             $datos = explode(" ", self::limpiarCampo($resource[2]));
+
             $datoJson = array('error' => 0, 'nacionalidad' => $nac, 'cedula' => $ci, 'nombres' => $datos[0] . ' ' . $datos[1], 'apellidos' => $datos[2] . ' ' . $datos[3], 'inscrito' => 'SI', 'cvestado' => self::limpiarCampo($resource[3]), 'cvmunicipio' => self::limpiarCampo($resource[4]), 'cvparroquia' => self::limpiarCampo($resource[5]), 'centro' => self::limpiarCampo($resource[6]), 'direccion' => self::limpiarCampo($resource[7]));
+
         } elseif ($pos == FALSE AND $pos2 == FALSE) {
             // Codigo buscar votante
             $rempl = array('Cédula:', 'Primer Nombre:', 'Segundo Nombre:', 'Primer Apellido:', 'Segundo Apellido:', 'ESTATUS');
             $r = trim(str_replace($rempl, '|', $text));
             $resource = explode("|", $r);
+
             $datoJson = array('error' => 0, 'nacionalidad' => $nac, 'cedula' => $ci, 'nombres' => self::limpiarCampo($resource[2]) . ' ' . self::limpiarCampo($resource[3]), 'apellidos' => self::limpiarCampo($resource[4]) . ' ' . self::limpiarCampo($resource[5]), 'inscrito' => 'NO');
+
         } elseif ($pos == FALSE AND $pos2 == TRUE) {
+
             $datoJson = array('error' => 1, 'nacionalidad' => $nac, 'cedula' => $ci, 'nombres' => NULL, 'apellidos' => NULL, 'inscrito' => 'NO');
         }
+
         echo json_encode($datoJson);
     }
 
@@ -65,7 +69,6 @@ class SearchCurl {
 
         return $return;
     }
-
     /**
      * Permite limpiar los valores del renorno del carro (\n \r \t) 
      * @author Gregorio Jose Bolivar Bolivar <elalconxvii@gmail.com>
@@ -81,7 +84,6 @@ class SearchCurl {
 
 $curls = new SearchCurl();
 $curls->SearchCNE('V', 26039408);
-
 
 // FAlta comparar con la base de datos
 ?>
